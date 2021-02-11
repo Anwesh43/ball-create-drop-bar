@@ -1,4 +1,5 @@
 import {useState, useEffect} from 'react'
+const parts = 2
 
 const scGap = 0.02 
 const delay = 20 
@@ -13,6 +14,8 @@ export const useAnimatedScale = () => {
                 const interval = setInterval(() => {
                     setScale((prevScale) => {
                         if (prevScale + scGap > 1) {
+                            setAnimated(false)
+                            clearInterval(interval)
                             return 0 
                         }
                         return prevScale + scGap 
@@ -38,15 +41,19 @@ export const useDimension = () => {
             }
         }
     })
+    return {
+        w, 
+        h
+    }
 }
 
-const sinify = () => Math.sin(scale * Math.PI)
+const sinify = (scale) => Math.sin(scale * Math.PI)
 
 const maxScale = (scale, i, n) => Math.max(0, scale - i / n)
 
 const divideScale = (scale, i, n) => Math.min(1 / n, maxScale(scale, i, n)) * n 
 
-const parts = 3 
+ 
 
 export const useStyle = (w, h, scale) => {
     const position = 'absolute'
