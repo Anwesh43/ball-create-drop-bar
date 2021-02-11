@@ -34,8 +34,57 @@ export const useDimension = () => {
         }
         return () => {
             window.onresize = () => {
-                
+
             }
         }
     })
+}
+
+const sinify = () => Math.sin(scale * Math.PI)
+
+const maxScale = (scale, i, n) => Math.max(0, scale - i / n)
+
+const divideScale = (scale, i, n) => Math.min(1 / n, maxScale(scale, i, n)) * n 
+
+const parts = 3 
+
+export const useStyle = (w, h, scale) => {
+    const position = 'absolute'
+    const size = Math.min(w, h) / 10 
+    const left = `${w / 2 - size / 2}px`
+    const background = 'indigo'
+    const sf = sinify(scale)
+    const sf1 = divideScale(sf, 0, parts)
+    const sf2 = divideScale(sf, 1, parts)
+    return {
+        circleStyle() {
+            const top = `${(h / 2 - size) * sf1}px`
+            const width = `${size}px`
+            const height = `${size}px`
+            const borderRadius = `50%`
+            return {
+                position, 
+                left, 
+                top, 
+                width, 
+                height, 
+                background,
+                borderRadius, 
+            }
+        },
+        barStyle() {
+            const top = `${h / 2}px`
+            const width = `${size}px`
+            const strokeHeight = Math.min(w, h) / 90
+            const height = `${strokeHeight + (h / 2 - strokeHeight) * sf2}px`
+            return {
+                position, 
+                left, 
+                width, 
+                height, 
+                top, 
+                background 
+            }
+        }
+    }
 }
